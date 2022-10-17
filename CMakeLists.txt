@@ -5,7 +5,7 @@ project(ip_filter VERSION 1)
 find_package(Boost COMPONENTS unit_test_framework REQUIRED)
 
 set (TESTS_SOURCES
-	    tests.cpp)
+	    tests/tests.cpp)
 
 add_executable(ip_filter_cli main.cpp)
 add_library(ip_filter ip.cpp)
