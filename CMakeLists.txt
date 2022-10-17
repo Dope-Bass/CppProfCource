@@ -2,9 +2,11 @@ cmake_minimum_required(VERSION 3.2)
 
 project(ip_filter VERSION 1)
 
+set(PROJECT ip_filter)
+
 find_package(Boost COMPONENTS unit_test_framework REQUIRED)
 
-set (TESTS_SOURCES
+set(TESTS_SOURCES
 	    tests/tests.cpp)
 
 add_executable(ip_filter_cli main.cpp)
@@ -29,9 +31,9 @@ if (TESTS_SOURCES)
 			unit_test_framework
 		REQUIRED)
 	include_directories(${Boost_INCLUDE_DIRS})
-	set (TEST test_ip_filter)
+	set (TEST test_${PROJECT})
 	add_executable (${TEST} ${TESTS_SOURCES})
-	target_link_libraries (${TEST} ip_filter ${Boost_LIBRARIES})
+	target_link_libraries (${TEST} ${PROJECT} ${Boost_LIBRARIES})
 	enable_testing ()
 	add_test (${TEST} ${TEST})
 endif ()
