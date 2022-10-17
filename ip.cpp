@@ -40,7 +40,7 @@ std::vector<std::string> IP::splitBy(std::string string, char letter)
 
 bool IP::isIP(std::string address)
 {
-    std::regex expr("^([0-9]{1,3})\\.([0-9]{1,3})\\.([0-9]{1,3})\\.([0-9]{1,3})$");
+    std::regex expr("^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$");
     return std::regex_match(address, expr);
 }
 
