@@ -44,6 +44,11 @@ BOOST_AUTO_TEST_CASE(InValid) {
     IP ip4(str);
 
     BOOST_REQUIRE( !ip4.isValid() );
+
+    str = "ab.4.5.6";
+    IP ip5(str);
+
+    BOOST_REQUIRE( !ip5.isValid() );
 }
 
 BOOST_AUTO_TEST_SUITE_END()
