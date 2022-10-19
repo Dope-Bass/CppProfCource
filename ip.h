@@ -1,5 +1,6 @@
 #include <string>
 #include <vector>
+#include <array>
 
 class IP {
 
@@ -10,8 +11,8 @@ public:
 
     ~IP() = default;
 
-    static std::vector<std::string> splitBy(std::string string, char letter);
-    static bool isIP(std::string address);
+    static std::vector<std::string> splitBy(std::string &string, char letter);
+    static bool isIP(std::string &address);
 
     std::string asString();
     bool isValid() const;
@@ -22,19 +23,16 @@ public:
 
     bool operator< (const IP &right);
 
-    short first()   const { return m_first; }
-    short second()  const { return m_second; }
-    short third()   const { return m_third; }
-    short fourth()  const { return m_fourth; }
+    short first()   const { return m_ip[0]; }
+    short second()  const { return m_ip[1]; }
+    short third()   const { return m_ip[2]; }
+    short fourth()  const { return m_ip[3]; }
 
 private:
-    short m_first = 0;
-    short m_second = 0;
-    short m_third = 0;
-    short m_fourth = 0;
 
-    std::string m_asString;
+    std::array<int, 4> m_ip;
 
     void convertToInt(std::vector<std::string> &address);
+    std::string convertToStr() const;
     void fromVector(std::vector<std::string> &address);
 };

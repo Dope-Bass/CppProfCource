@@ -18,7 +18,7 @@ IP::IP(std::string &address)
     fromVector( vecAddress );
 }
 
-std::vector<std::string> IP::splitBy(std::string string, char letter)
+std::vector<std::string> IP::splitBy(std::string &string, char letter)
 {
     std::vector<std::string> rv;
 
@@ -38,7 +38,7 @@ std::vector<std::string> IP::splitBy(std::string string, char letter)
     return rv;
 }
 
-bool IP::isIP(std::string address)
+bool IP::isIP(std::string &address)
 {
     std::regex expr("^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$");
     return std::regex_match(address, expr);
@@ -47,7 +47,7 @@ bool IP::isIP(std::string address)
 std::string IP::asString()
 {
     if ( isValid() ) {
-        return m_asString;
+        return convertToStr();
     } 
     
     return std::string();
@@ -55,13 +55,14 @@ std::string IP::asString()
 
 bool IP::isValid() const
 {
-    return IP::isIP( m_asString );
+    auto rv = convertToStr();
+    return IP::isIP( rv );
 }
 
 bool IP::isFirst(short f) const
 {
     if ( isValid() ) {
-        return m_first == f;
+        return first() == f;
     }
     
     return false;
@@ -70,7 +71,7 @@ bool IP::isFirst(short f) const
 bool IP::isTwo(short f, short s) const
 {
     if ( isValid() ) {
-        return m_first == f && m_second == s;
+        return first() == f && second() == s;
     }
 
     return false;
@@ -79,7 +80,7 @@ bool IP::isTwo(short f, short s) const
 bool IP::isAny(short a) const
 {
     if ( isValid() ) {
-        return m_first == a || m_second == a || m_third == a || m_fourth == a;
+        return first() == a || second() == a || third() == a || fourth() == a;
     }
 
     return false;
@@ -104,22 +105,37 @@ bool IP::operator<(const IP &right)
 
 void IP::convertToInt(std::vector<std::string> &address)
 {
-    m_first = std::stoi( address[0] );
-    m_second = std::stoi( address[1] );
-    m_third = std::stoi( address[2] );
-    m_fourth = std::stoi( address[3] );
+    for( int index = 0; index < address.size(); ++index ) {
+        m_ip[index] = std::stoi( address[index] );
+    }
+}
+
+std::string IP::convertToStr() const
+{
+    std::string strAddress = "";
+    for ( int index = 0; index < m_ip.size(); ++index ) {
+        strAddress.append( std::to_string(m_ip[index]) );
+        if ( index != m_ip.size() - 1 ) {
+            strAddress += '.';
+        }
+    }
+
+    return strAddress;
 }
 
 void IP::fromVector(std::vector<std::string> &address)
 {
+    std::string strAddress = "";
     for ( int index = 0; index < address.size(); ++index ) {
-        m_asString.append( address[index] );
+        strAddress.append( address[index] );
         if ( index != address.size() - 1 ) {
-            m_asString += '.';
+            strAddress += '.';
         }
     }
 
-    if ( IP::isIP( m_asString ) ) {
+    if ( IP::isIP( strAddress ) ) {
         convertToInt( address );
+    } else {
+        throw std::logic_error( strAddress );
     }
 }
