@@ -89,15 +89,7 @@ bool IP::isAny(short a) const
 bool IP::operator<(const IP &right)
 {
     if ( isValid() && right.isValid() ) {
-        if ( first() != right.first() ) {
-            return first() < right.first();
-        } else if ( second() != right.second() ) {
-            return second() < right.second();
-        } else if ( third() != right.third() ) {
-            return third() < right.third();
-        } else if ( fourth() != right.fourth() ) {
-            return fourth() < right.fourth();
-        }
+        return m_ip < right.getIP();
     }
 
     return false;

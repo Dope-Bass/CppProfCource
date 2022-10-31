@@ -28,6 +28,8 @@ public:
     short third()   const { return m_ip[2]; }
     short fourth()  const { return m_ip[3]; }
 
+    const std::array<int, 4>& getIP() const { return m_ip; }
+
 private:
 
     std::array<int, 4> m_ip;
