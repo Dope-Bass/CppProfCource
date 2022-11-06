@@ -35,6 +35,8 @@ install(TARGETS allocator_cli RUNTIME DESTINATION bin)
 
 set(CPACK_GENERATOR DEB)
 
+set(CPACK_PACKAGE_CONTACT example@example.com)
+
 set(CXXFLAGS  "-g")
 set(CMAKE_CXX_FLAGS "${CXXFLAGS}")
 
