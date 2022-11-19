@@ -6,9 +6,11 @@
 
 namespace ns_integral {
 
+    // Template specification for integers
     template <typename T>
     using IsIntegral = std::enable_if_t<std::is_integral<T>::value, bool>;
 
+    // Conversion of integer into array of bytes
     template <typename T, IsIntegral< T > = true>
     std::vector<unsigned char> intToBytes(T param)
     {
@@ -22,6 +24,7 @@ namespace ns_integral {
 
 namespace ns_string {
 
+    // Template specification for strings
     template <typename T>
     using IsString = std::enable_if_t<std::is_same<T, std::string>::value, bool>;
 
@@ -33,9 +36,11 @@ namespace ns_container {
     template <typename... Args>     struct is_stl_container<std::vector  <Args...>> : std::true_type{};
     template <typename... Args>     struct is_stl_container<std::list    <Args...>> : std::true_type{};
 
+    // Template specification for vector and list containers
     template <typename T>
     using IsContainerSpec = std::enable_if_t<is_stl_container<std::decay_t<T>>::value, bool>;
 
+    // Print container separating elements by dots
     template <typename T, IsContainerSpec< T > = true>
     void printDots(T &&container) 
     {
@@ -55,6 +60,7 @@ namespace ns_tuple {
 
     template <class T, class... Ts> struct are_same : std::conjunction<std::is_same<T, Ts>...> {};
 
+    // Template specification for tuple containing elements of same type
     template <typename... Args>
     using IsSameType = std::enable_if_t<are_same<Args...>::value, bool>;
 
@@ -67,6 +73,7 @@ namespace ns_tuple {
     template<std::size_t I = 0, typename... Ts>
     Tail<I, Ts...> print_tuple(std::tuple<Ts...>& t) { std::cout << std::endl; }
 
+    // Printing tuple
     template<std::size_t I = 0, typename... Ts>
     Default<I, Ts...> print_tuple(std::tuple<Ts...>& t)
     {
