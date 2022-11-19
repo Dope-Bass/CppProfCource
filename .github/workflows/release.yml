@@ -38,7 +38,6 @@ jobs:
           asset_name: print_ip-1-Linux.deb
           asset_content_type: application/vnd.debian.binary-package
 
-jobs:
   build-documentation:
     runs-on: ubuntu-latest
 
