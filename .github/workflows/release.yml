@@ -38,12 +38,6 @@ jobs:
           asset_name: print_ip-1-Linux.deb
           asset_content_type: application/vnd.debian.binary-package
 
-name: Documentation
-
-on:
-  push:
-    branches: [ SFINAE-IP-Task ]
-
 jobs:
   build-documentation:
     runs-on: ubuntu-latest
