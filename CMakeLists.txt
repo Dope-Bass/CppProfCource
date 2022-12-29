@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.2)
 
 project(MVC_Editor VERSION 1)
 
-set(PROJECT MVC_Editor )
+set(PROJECT MVC_Editor)
 
 add_executable(MVC_Editor main.cpp)
 
