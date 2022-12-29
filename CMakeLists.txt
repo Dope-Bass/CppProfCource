@@ -6,7 +6,7 @@ set(PROJECT MVC_Editor)
 
 add_executable(MVC_Editor main.cpp)
 
-set_target_properties(MVC-Editor PROPERTIES
+set_target_properties(MVC_Editor PROPERTIES
     CXX_STANDARD 17
     CXX_STANDARD_REQUIRED ON
 )
