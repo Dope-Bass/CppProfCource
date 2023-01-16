@@ -39,9 +39,11 @@ class Reader {
 
         void executePool()
         {
-            CommandSerializer::printBlock(m_pool);
-            CommandSerializer::logBlock(m_pool, m_blockTime);
-            m_pool.clear();
+            if ( !m_pool.empty() ) {
+                CommandSerializer::printBlock(m_pool);
+                CommandSerializer::logBlock(m_pool, m_blockTime);
+                m_pool.clear();
+            }
         }
 
         void addCommand(CommandPtr command)
