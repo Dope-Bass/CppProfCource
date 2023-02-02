@@ -4,6 +4,8 @@
 #include <memory>
 #include <fstream>
 
+#include "observer.h"
+
 class Command {
     public:
         Command(std::string &name) 
@@ -28,28 +30,28 @@ class PrintItselfCommand : public Command {
         }
 };
 
-class CommandSerializer {
+static std::string serializeBlock(std::list<std::shared_ptr<Command>> &block)
+{
+    std::string out = "bulk: ";
+    for ( auto it = block.begin(); it != block.end(); ++it ) {
+        out += (*it)->execute();
+        if ( it != std::prev(block.end()) ) {
+            out += ", ";
+        }
+    }
+    out += "\n";
+    return out;
+}
+
+class CmdLogger : public Follower {
     public:
-        static std::string serializeBlock(std::list<std::shared_ptr<Command>> &block)
+        CmdLogger(Author *a)
         {
-            std::string out = "bulk: ";
-            for ( auto it = block.begin(); it != block.end(); ++it ) {
-                out += (*it)->execute();
-                if ( it != std::prev(block.end()) ) {
-                    out += ", ";
-                }
-            }
-            out += "\n";
-            return out;
+            a->addFollower( this );
         }
+        ~CmdLogger() {}
 
-        static void printBlock(std::list<std::shared_ptr<Command>> &block)
-        {
-            auto rv = serializeBlock(block);
-            std::cout << rv;
-        }
-
-        static void logBlock(std::list<std::shared_ptr<Command>> &block, unsigned long time)
+        virtual void onExecute(CmdPool &block, unsigned long time = 0)
         {
             auto rv = serializeBlock(block);
             std::ofstream log;
@@ -57,5 +59,20 @@ class CommandSerializer {
             log.open(name);
             log << rv;
             log.close();
+        }
+};
+
+class CmdPrinter : public Follower {
+    public:
+        CmdPrinter(Author *a)
+        {
+            a->addFollower( this );
+        }
+        ~CmdPrinter() {}
+
+        virtual void onExecute(CmdPool &block, unsigned long time)
+        {
+            auto rv = serializeBlock(block);
+            std::cout << rv;
         }
 };

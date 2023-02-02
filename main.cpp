@@ -25,6 +25,9 @@ int main(int argc, char* argv[])
     }
 
     Reader reader(count);
+    CmdLogger lg( &reader );
+    CmdPrinter pr( &reader );
+
     std::string com_name;
     while ( std::cin >> com_name ) {
         reader << CommandPtr( new PrintItselfCommand( com_name ) );

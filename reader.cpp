@@ -19,7 +19,7 @@ class ReadHandler {
 
 using HandlerPtr = std::unique_ptr<ReadHandler>;
 
-class Reader {
+class Reader : public Author {
 
     public:
 
@@ -39,28 +39,27 @@ class Reader {
 
         void executePool()
         {
-            if ( !m_pool.empty() ) {
-                CommandSerializer::printBlock(m_pool);
-                CommandSerializer::logBlock(m_pool, m_blockTime);
-                m_pool.clear();
+            if ( !cmds.empty() ) {
+                notifyExec();
+                cmds.clear();
             }
         }
 
         void addCommand(CommandPtr command)
         {
-            if ( m_pool.empty() ) {
+            if ( cmds.empty() ) {
                 auto now = std::chrono::system_clock::now();
                 auto now_ms = std::chrono::time_point_cast<std::chrono::milliseconds>(now);
                 auto epoch = now_ms.time_since_epoch();
                 auto value = std::chrono::duration_cast<std::chrono::milliseconds>(epoch);
                 m_blockTime = value.count();
             }
-            m_pool.push_back( command );
+            cmds.push_back( command );
         }
 
         int poolSize() const
         {
-            return m_pool.size();
+            return cmds.size();
         }
 
         unsigned int poolMaxSize() const
@@ -75,9 +74,7 @@ class Reader {
 
     private:
         HandlerPtr m_handler;
-        CmdPool m_pool;
         unsigned int m_count;
-        unsigned long m_blockTime;
 };
 
 class DynamicRead : public ReadHandler {
