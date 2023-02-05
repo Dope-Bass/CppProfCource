@@ -4,11 +4,8 @@ project(bayan VERSION 1)
 
 set(PROJECT bayan)
 
-find_package( 
- Boost 1.65 REQUIRED 
- COMPONENTS  filesystem program_options 
-)
-install(PROGRAMS ${Boost_LIBRARIES} DESTINATION ~/install/lib)
+FIND_PACKAGE( Boost COMPONENTS program_options filesystem REQUIRED )
+INCLUDE_DIRECTORIES( ${Boost_INCLUDE_DIR} )
 
 add_executable(bayan main.cpp)
 
