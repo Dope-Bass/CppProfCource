@@ -1,11 +1,14 @@
-cmake_minimum_required(VERSION 3.26)
+cmake_minimum_required(VERSION 3.2)
 
 project(bayan VERSION 1)
 
 set(PROJECT bayan)
 
-FIND_PACKAGE( Boost COMPONENTS program_options filesystem REQUIRED )
-INCLUDE_DIRECTORIES( ${Boost_INCLUDE_DIR} )
+find_package( 
+ Boost 1.65 REQUIRED 
+ COMPONENTS  filesystem program_options 
+)
+install(PROGRAMS ${Boost_LIBRARIES} DESTINATION ~/install/lib)
 
 add_executable(bayan main.cpp)
 
