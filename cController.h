@@ -13,7 +13,7 @@ class Controller {
 
         void addObject()
         {
-            m_doc->addObject( std::shared_ptr<SomeObject>() );
+            m_doc->addSomeObject( std::shared_ptr<SomeObject>() );
         }
 
         void removeObject()
@@ -30,6 +30,11 @@ class Controller {
         void exportDoc(const std::string &name)
         {
             m_doc->serialize( name );
+        }
+
+        void newDoc()
+        {
+            m_doc.reset( new Document() );
         }
         
     private:

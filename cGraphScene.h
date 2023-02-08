@@ -20,6 +20,7 @@ class SomeViewObject : public ViewObject {
         virtual void draw() override {  };
 
     private:
+        std::shared_ptr<SomeObject> m_model;
 
 };
 
@@ -31,20 +32,23 @@ class GraphScene : public Follower {
         }
         ~GraphScene() {}
 
-        virtual void onAdd(std::shared_ptr<SomeObject> ptr) override
+        virtual void onAddSomeObject(std::shared_ptr<SomeObject> ptr) override
         {
-            objects.push_back( std::shared_ptr<ViewObject>() );
+            objects.push_back( std::make_shared<SomeViewObject>( ptr ) );
+            draw();
         }
 
         virtual void onRemove() override
         {
             objects.pop_back();
+            draw();
         }
 
-        void draw( std::shared_ptr<ViewObject> obj )
+        void draw()
         {
-            objects.push_back( obj );
-            obj->draw();
+            for ( auto obj : objects ) {
+                obj->draw();
+            }
         }
 
         void erase()

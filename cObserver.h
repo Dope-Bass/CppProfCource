@@ -7,7 +7,7 @@ class Follower {
     public:
         virtual ~Follower() = default;
 
-        virtual void onAdd(std::shared_ptr<SomeObject> ptr) = 0;
+        virtual void onAddSomeObject(std::shared_ptr<SomeObject> ptr) = 0;
         virtual void onRemove() = 0;
 
 };
@@ -20,9 +20,9 @@ class Author {
             followers.push_back( f );
         }
 
-        void notifyAdd(std::shared_ptr<SomeObject> ptr) {
+        void notifyAddSomeObject(std::shared_ptr<SomeObject> ptr) {
             for ( auto f : followers ) {
-                f->onAdd( ptr );
+                f->onAddSomeObject( ptr );
             }
         }
 

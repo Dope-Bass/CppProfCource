@@ -1,0 +1,74 @@
+@startuml
+
+class Controller {
+    -m_doc: Model::Document
+    -m_scene: View::GraphScene
+    +newDoc()
+    +addObject(number)
+    +removeObject(number)
+    +importDoc(string)
+    +exportDoc(string)
+}
+
+Controller o-- Model.Document
+Controller o-- View.GraphScene
+
+package Observer {
+    interface Follower {
+        +onAddSomeObject(SomeObject)
+        +onRemove()
+    }
+    class Author {
+        -followers: List<Follower>
+        +addFollower(Follower)
+        +notifyAddSomeObject(SomeObject)
+        +notifyRemove()
+    }
+
+    Follower <|-- .View.GraphScene
+    Author <|-- .Model.Document
+}
+
+package Model {
+    interface ModelObject {
+        +serialize(): string
+    }
+    class SomeObject {
+        +serialize()
+    }
+    class Document {
+        -objects: List<ModelObject>
+        +serialize(): string
+        +{static} deserialize(string): Document
+        +addSomeObject(SomeObject)
+        +rmObject()
+    }
+
+    ModelObject <|-- SomeObject
+    Document o-- ModelObject
+
+    SomeObject <.. .View.SomeViewObject
+}
+
+package View {
+    interface ViewObject {
+        +draw()
+    }
+    class SomeViewObject {
+        -m_model: Model::SomeObject
+        +SomeViewObject(Model::SomeObject)
+        +draw()
+    }
+    class GraphScene {
+        -objects: List<ViewObject>
+        +GraphScene(Model::Document)
+        +onRemove()
+        +onAddSomeObject(Model::SomeObject)
+        -draw()
+    }
+
+    ViewObject <|-- SomeViewObject
+    GraphScene o-- ViewObject
+}
+
+@enduml

@@ -34,15 +34,15 @@ class Document : public Author {
             }
         }
 
-        void deserialize(const std::string &name)
+        static std::shared_ptr<Document> deserialize(const std::string &name)
         {
             // read from file
         }
 
-        void addObject(std::shared_ptr<SomeObject> obj) 
+        void addSomeObject(std::shared_ptr<SomeObject> obj) 
         {
             objects.push_back( obj );
-            notifyAdd( obj );
+            notifyAddSomeObject( obj );
         }
 
         void rmObject()
