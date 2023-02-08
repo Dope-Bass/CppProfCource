@@ -4,8 +4,8 @@ class Controller {
     -m_doc: Model::Document
     -m_scene: View::GraphScene
     +newDoc()
-    +addObject(number)
-    +removeObject(number)
+    +addObject()
+    +removeObject()
     +importDoc(string)
     +exportDoc(string)
 }
