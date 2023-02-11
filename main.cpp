@@ -54,7 +54,7 @@ int main(int argc, char* argv[])
                 po::value< std::vector<std::string> >(),
                 "File masks to scan - ex: \"*.txt\"")
             (boost::str( boost::format("%1%,%2%") % BLOCK_SIZE % BLOCK_SIZE[0] ).c_str(),
-                po::value<unsigned int>(&block_size)->default_value(5),
+                po::value<unsigned int>(&block_size)->default_value(1),
                 "Size of block using for file reading")
             (boost::str( boost::format("%1%,%2%") % HASH % "H" ).c_str(),
                 po::value<std::string>(&hash)->default_value(crc32),
