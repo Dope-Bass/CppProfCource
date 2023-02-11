@@ -83,6 +83,7 @@ class Runner {
         void run( path p )
         {
             for ( auto &entry : boost::make_iterator_range(f::directory_iterator(p), {}) ) {
+                std::cout << "Process: " << entry.path().string() << std::endl;
                 if ( isDirForScan( entry.path() ) && m_level ) {
                     run( entry.path() );
                 } else if ( f::is_regular_file(entry.path()) && regexMatch(entry.path().string())) {
@@ -133,6 +134,7 @@ class Runner {
 
         void print()
         {
+            std::cout << "------------------- Doublicates ------------------------" << std::endl;
             for ( auto bucket = 0; bucket < fileTable.bucket_count(); ++bucket ) {
                 for ( auto it = fileTable.begin(bucket); it != fileTable.end(bucket); ++it ) {
                     std::cout << it->second << '\n';

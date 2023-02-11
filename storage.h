@@ -14,7 +14,6 @@ class File {
             : m_path(p), m_fileSize(fileSize), m_blockSize(blockSize)
         {
             m_stream = std::make_shared<std::ifstream>();
-            m_stream->open( p.string() );
 
             m_func = getHash( h );
         }
@@ -30,7 +29,7 @@ class File {
             if ( right.size() != m_fileSize ) {
                 return false;
             } else {
-                for ( auto i = 0; i <= m_fileSize; ++i ) {
+                for ( auto i = 0; i <= std::ceil( m_fileSize / m_blockSize ); ++i ) {
                     if ( getBlock( i ) == right.getBlock( i ) ) {
                         continue;
                     }
@@ -65,12 +64,11 @@ class File {
             }
             catch( std::out_of_range const& exc ) {
                 std::string str(m_blockSize, '\0');
-                if ( m_stream->read(&str[0], m_blockSize) ) {
-                    m_hashes.push_back( m_func->hash( str ) );
-                    if ( m_hashes.size() == std::ceil(m_fileSize / m_blockSize) ) {
-                        m_stream->close();
-                    }
-                }
+                m_stream->open( m_path.string() );
+                m_stream->seekg(b * m_blockSize);
+                m_stream->read(&str[0], m_blockSize);
+                m_hashes.push_back( m_func->hash( str ) );
+                m_stream->close();
 
                 return m_hashes.back();
             }
