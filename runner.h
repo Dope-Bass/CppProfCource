@@ -55,11 +55,9 @@ class Runner {
         {
             masks.clear();
             for ( auto str : vec ) {
-                std::cout << str << std::endl;
                 boost::replace_all(str, std::string("*"), std::string(".*"));
                 boost::algorithm::to_lower( str );
                 str.append(std::string("$"));
-                std::cout << str << std::endl;
                 masks.push_back( std::regex( str ) );
             }
         }
