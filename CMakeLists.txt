@@ -1,23 +1,10 @@
-cmake_minimum_required(VERSION 3.2)
+cmake_minimum_required(VERSION 3.9)
+project(async)
 
-project(bulk VERSION 1)
+set(CMAKE_CXX_STANDARD 14)
 
-set(PROJECT bulk)
+add_library(async SHARED async.cpp async.h)
 
-add_executable(bulk main.cpp)
+add_executable(async_cli main.cpp)
 
-set_target_properties(bulk PROPERTIES
-    CXX_STANDARD 17
-    CXX_STANDARD_REQUIRED ON
-)
-
-install(TARGETS bulk RUNTIME DESTINATION bin)
-
-set(CPACK_GENERATOR DEB)
-
-set(CPACK_PACKAGE_CONTACT example@example.com)
-
-set(CXXFLAGS  "-g")
-set(CMAKE_CXX_FLAGS "${CXXFLAGS}")
-
-include(CPack)
+target_link_libraries(async_cli async)

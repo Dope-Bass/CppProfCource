@@ -1,39 +1,17 @@
 #include <iostream>
-#include <memory>
-#include "reader.cpp"
 
-int main(int argc, char* argv[]) 
-{
-    int count;
+#include "async.h"
 
-    switch(argc) {
-        case 1:
-            std::cout << "Not enough arguments" << std::endl;
-            return 1;
-        case 2: {
-            try { count = std::stoi(std::string(argv[1])); }
-            catch(std::invalid_argument) 
-            {
-                std::cout << "Invalid argument" << std::endl;
-                return 1;
-            };
-            break;
-        }
-        default:
-            std::cout << "Too many arguments" << std::endl;
-            return 1;
-    }
+int main(int, char *[]) {
+    std::size_t bulk = 5;
+    auto h = async::connect(bulk);
+    auto h2 = async::connect(bulk);
+    async::receive(h, "1", 1);
+    async::receive(h2, "1\n", 2);
+    async::receive(h, "\n2\n3\n4\n5\n6\n{\na\n", 15);
+    async::receive(h, "b\nc\nd\n}\n89\n", 11);
+    async::disconnect(h);
+    async::disconnect(h2);
 
-    Reader reader(count);
-    CmdLogger lg( &reader );
-    CmdPrinter pr( &reader );
-
-    std::string com_name;
-    while ( std::cin >> com_name ) {
-        reader << CommandPtr( new PrintItselfCommand( com_name ) );
-    }
-
-    if ( reader.dynamic == true ) {
-        reader.executePool();
-    }
+    return 0;
 }
