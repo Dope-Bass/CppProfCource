@@ -3,6 +3,8 @@
 #include <utility>
 #include <string>
 #include <chrono>
+#include <thread>
+#include <list>
 
 #include "pool.h"
 
@@ -10,6 +12,7 @@ class Reader;
 
 using CommandPtr = std::shared_ptr<Command>;
 using CmdPool = std::list<CommandPtr>;
+using Printer = std::unique_ptr<CmdPrinter>;
 
 class ReadHandler {
     
@@ -23,7 +26,14 @@ class Reader : public Author {
 
     public:
 
-        Reader(unsigned int count);
+        Reader(size_t count);
+
+        ~Reader()
+        {
+            for ( auto f : followers ) {
+                f->stop();
+            }
+        }
 
         Reader &operator << (CommandPtr command) 
         {
@@ -40,7 +50,11 @@ class Reader : public Author {
         void executePool()
         {
             if ( !cmds.empty() ) {
-                notifyExec();
+                {
+                    std::unique_lock<std::mutex> guard(m_mutex);
+                    m_printer->process();
+                }
+                m_blocks.push( cmds );
                 cmds.clear();
             }
         }
@@ -52,7 +66,7 @@ class Reader : public Author {
                 auto now_ms = std::chrono::time_point_cast<std::chrono::milliseconds>(now);
                 auto epoch = now_ms.time_since_epoch();
                 auto value = std::chrono::duration_cast<std::chrono::milliseconds>(epoch);
-                m_blockTime = value.count();
+                command->setTime( value.count() );
             }
             cmds.push_back( command );
         }
@@ -62,7 +76,7 @@ class Reader : public Author {
             return cmds.size();
         }
 
-        unsigned int poolMaxSize() const
+        size_t poolMaxSize() const
         {
             return m_count;
         }
@@ -74,7 +88,9 @@ class Reader : public Author {
 
     private:
         HandlerPtr m_handler;
-        unsigned int m_count;
+        size_t m_count;
+
+        Printer m_printer;
 };
 
 class DynamicRead : public ReadHandler {
@@ -103,10 +119,15 @@ class StaticRead : public ReadHandler {
         }
 };
 
-Reader::Reader(unsigned int count)
+Reader::Reader(size_t count)
 {
     m_handler = HandlerPtr{ new StaticRead() };
     m_count = count;
+
+    new CmdLogger( this );
+    new CmdLogger( this );
+
+    m_printer = std::make_unique<CmdPrinter>( this );
 }
 
 void DynamicRead::read(Reader *reader, CommandPtr com)

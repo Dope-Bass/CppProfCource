@@ -8,3 +8,5 @@ add_library(async SHARED async.cpp async.h)
 add_executable(async_cli main.cpp)
 
 target_link_libraries(async_cli async)
+
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread -g")
